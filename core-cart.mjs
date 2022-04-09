@@ -11,7 +11,7 @@ const formatProductName = (product) => {
     let spaceName = 15;
     let spacePrice = 36;
     let stringResult = '';
-    for(let i = 0;i < stringDimension;){
+    for(let index = 0;index < stringDimension;){
         if(stringResult.length === spaceEan)
             stringResult += `[${product.ean}]`;
         else if(stringResult.length === spaceName){
@@ -24,7 +24,7 @@ const formatProductName = (product) => {
         }    
         else 
             stringResult += ' ';
-        i = stringResult.length;
+        index = stringResult.length;
     }
     return stringResult;
 }
@@ -49,7 +49,7 @@ const getUserDiscount = (promo) =>{
 
 const getUser = (uuid) => users.find(user => user.uuid === uuid);
 
-const getProduct = (codice) => products.find(prod => prod.ean === codice)
+const getProduct = (codice) => products.find(prodotto => prodotto.ean === codice)
 
 const getProductsArray = (prodotti) => {
     let array = []
@@ -59,26 +59,9 @@ const getProductsArray = (prodotti) => {
     return array;
 }
 
-const getTotale = (productsUser) => {
-    let totale = 0;
-    productsUser.forEach(element =>{
-        totale += element.price
-    })
-    return totale;
-}
+const getTotale = (productsUser) =>  productsUser.reduce((previous,prodotto) => previous+prodotto.price,0);
 
 const getSconto = (totale,sconto) => totale*(sconto);
-
-const getPromoAsString = (promo) => {
-    if(promo === undefined)
-        return '';
-    let result = promoCode.find(element =>{
-        return element.name === promo
-    })
-    if(result?.name !== undefined)
-        return result?.name
-    return '';
-}
 
 const getTotaleScontato = (totale,sconto) => totale-sconto;
 
@@ -95,95 +78,95 @@ const createStringProductList = (prodotti) => {
 }
 
 const createStringTotale = (totale) => {
-    let spaceTotaleStr = 3;
-    let spaceTotale = 36;
+    let startTotaleString = 3;
+    let startTotaleValue = 36;
     let stringResult = ''
-    for(let i = 0;i < stringDimension;){
-        if(stringResult.length === spaceTotaleStr)
+    for(let index = 0;index < stringDimension;){
+        if(stringResult.length === startTotaleString)
             stringResult += `Totale:`;
-        else if(stringResult.length === spaceTotale){
+        else if(stringResult.length === startTotaleValue){
             stringResult += `${(totale).toFixed(2)}`
         }    
         else 
             stringResult += ' ';
-        i = stringResult.length;
+        index = stringResult.length;
     } 
     return stringResult
 }
 
 const createStringSeparator = (separator,symbol) => {
     let stringResult = '';
-    for(let i = 0;i < stringDimension;){
-        if(i === 0 || i === stringDimension-separator.length)
+    for(let index = 0;index < stringDimension;){
+        if(index === 0 || index === stringDimension-separator.length)
             stringResult += separator
-        else if(i === 0+separator.length || i === stringDimension-separator.length-1)
+        else if(index === 0+separator.length || index === stringDimension-separator.length-1)
             stringResult += ' '
         else
             stringResult += symbol
-        i = stringResult.length;
+        index = stringResult.length;
     }
     return stringResult
 }
 
 const createStringQuantitaSconto = (sconto) => {
     let stringResult = '';
-    let spaceScontoStr = 3;
-    let spaceSconto = 36;
-    for(let i = 0;i < stringDimension;){
-        if(stringResult.length === spaceScontoStr)
+    let spazioScontoString = 3;
+    let spazioScontoValue = 36;
+    for(let index = 0;index < stringDimension;){
+        if(stringResult.length === spazioScontoString)
             stringResult += `Sconto:`;
-        else if(stringResult.length === spaceSconto){
+        else if(stringResult.length === spazioScontoValue){
             stringResult += `${(sconto).toFixed(2)}`
         }    
         else 
             stringResult += ' ';
-        i = stringResult.length;
+        index = stringResult.length;
     }
     return stringResult
 }
 
 const createStringTotaleScontato = (sconto,totale) => {
     let stringResult = '';
-    let spaceTotScontoStr = 3;
-    let spaceTotSconto = 36;
-    for(let i = 0;i < stringDimension;){
-        if(stringResult.length === spaceTotScontoStr)
+    let spazioTotaleScontatoString = 3;
+    let spazioTotaleScontatoValue = 36;
+    for(let index = 0;index < stringDimension;){
+        if(stringResult.length === spazioTotaleScontatoString)
             stringResult += `Totale Scontato:`;
-        else if(stringResult.length === spaceTotSconto){
+        else if(stringResult.length === spazioTotaleScontatoValue){
             stringResult += `${(totale - sconto).toFixed(2)}`
         }    
         else 
             stringResult += ' ';
-        i = stringResult.length;
+        index = stringResult.length;
     }
     return stringResult
 }
 
 const createStringCodicePromo = (promo) => {
-    let spaceCodicePromo = 3;
-    let spaceCodicePromoCod = 36;
+    let spazioCodicePromoString = 3;
+    let spazioCodicePromoValue = 36;
     let stringResult = ''
-    for(let i = 0;i < stringDimension;){
-        if(stringResult.length === spaceCodicePromo)
+    for(let index = 0;index < stringDimension;){
+        if(stringResult.length === spazioCodicePromoString)
             stringResult += `CODICE PROMO:`;  
-        else if(stringResult.length === spaceCodicePromoCod)
+        else if(stringResult.length === spazioCodicePromoValue)
             stringResult += promo
         else 
             stringResult += ' ';
-        i = stringResult.length;
+        index = stringResult.length;
     }
     return stringResult 
 }
 
 const createStringSaldoResiduo = (user,totale) => {
-    let spaceSaldoResiduo = 3;
+    let spazioSaldoResiduoString = 3;
     let stringResult = ''
-    for(let i = 0;i < stringDimension;){
-        if(stringResult.length === spaceSaldoResiduo)
+    for(let index = 0;index < stringDimension;){
+        if(stringResult.length === spazioSaldoResiduoString)
             stringResult += `${user.firstName} ${user.lastName} ha un credito residuo di ${(user.wallet-totale).toFixed(2)}`;  
         else 
             stringResult += ' ';
-        i = stringResult.length;
+        index = stringResult.length;
     }
     return stringResult
 }
@@ -196,9 +179,9 @@ const getReceipt = (user,cart) => {
 
     if(totale>user.wallet){
         stringReturn += createStringSeparator('*','-') + '\n';
-        stringReturn += '  Saldo Insufficiente  ' + '\n';
+        stringReturn += `   ${user.firstName} ${user.lastName} ha un saldo insufficiente per acquistare i suoi prodotti ` + '\n';
         stringReturn += createStringSeparator('*','-');
-        return stringReturn
+        return stringReturn;
     }
         
 
