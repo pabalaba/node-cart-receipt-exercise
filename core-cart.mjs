@@ -175,15 +175,20 @@ const getReceipt = (user,cart) => {
     let stringReturn = '';
     let totale = getTotale(cart);
     let sconto = getUserDiscount(user.promo);
-    let quantitaSconto = 0;
+    let quantitaSconto = getSconto(totale,sconto);
 
-    if(totale>user.wallet){
+    if(totale-quantitaSconto>user.wallet){
         stringReturn += createStringSeparator('*','-') + '\n';
-        stringReturn += `   ${user.firstName} ${user.lastName} ha un saldo insufficiente per acquistare i suoi prodotti ` + '\n';
+        stringReturn += `   ${user.firstName} ${user.lastName} ha un saldo insufficiente  ` + '\n';
         stringReturn += createStringSeparator('*','-');
         return stringReturn;
     }
-        
+    if(totale==0){
+        stringReturn += createStringSeparator('*','-') + '\n';
+        stringReturn += `   ${user.firstName} ${user.lastName} non ha acquistato prodotti  ` + '\n';
+        stringReturn += createStringSeparator('*','-');
+        return stringReturn;
+    }   
 
     stringReturn += createStringSeparator('+','-') + '\n';
     stringReturn += printShopName() + '\n';
@@ -196,7 +201,6 @@ const getReceipt = (user,cart) => {
     if(sconto === 0){
         stringReturn += '\n';
     }else{
-        quantitaSconto = getSconto(totale,sconto);
         stringReturn += createStringQuantitaSconto(quantitaSconto) + '\n';
         stringReturn += createStringTotaleScontato(quantitaSconto,totale) + '\n\n';
         stringReturn += createStringCodicePromo(user.promo) + '\n';
@@ -204,6 +208,9 @@ const getReceipt = (user,cart) => {
     stringReturn += createStringSeparator('**','-') + '\n';
     stringReturn += sconto===0?createStringSaldoResiduo(user,totale)+'\n':createStringSaldoResiduo(user,getTotaleScontato(totale,quantitaSconto))+'\n';
     stringReturn += createStringSeparator('**','-');
+
+    let string = process.cwd()+`/receipts/`+user.uuid.toString()+`_receipt_`+new Date().toDateString()+`.txt`;
+    fs.writeFile(string, stringReturn, (err) => { if (err) throw err; });
     return stringReturn;
 }
 
