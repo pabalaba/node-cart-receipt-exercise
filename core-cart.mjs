@@ -59,7 +59,7 @@ const getProductsArray = (prodotti) => {
     return array;
 }
 
-const getTotale = (productsUser) =>  productsUser.reduce((previous,prodotto) => previous+prodotto.price,0);
+const getTotale = (productsUser) => productsUser.reduce((previous,prodotto) => previous+prodotto.price,0);
 
 const getSconto = (totale,sconto) => totale*(sconto);
 
@@ -176,8 +176,9 @@ const getReceipt = (user,cart) => {
     let totale = getTotale(cart);
     let sconto = getUserDiscount(user.promo);
     let quantitaSconto = getSconto(totale,sconto);
+    let totaleScontato = getTotaleScontato(totale,quantitaSconto);
 
-    if(totale-quantitaSconto>user.wallet){
+    if(totaleScontato>user.wallet){
         stringReturn += createStringSeparator('*','-') + '\n';
         stringReturn += `   ${user.firstName} ${user.lastName} ha un saldo insufficiente  ` + '\n';
         stringReturn += createStringSeparator('*','-');
@@ -206,7 +207,7 @@ const getReceipt = (user,cart) => {
         stringReturn += createStringCodicePromo(user.promo) + '\n';
     }
     stringReturn += createStringSeparator('**','-') + '\n';
-    stringReturn += sconto===0?createStringSaldoResiduo(user,totale)+'\n':createStringSaldoResiduo(user,getTotaleScontato(totale,quantitaSconto))+'\n';
+    stringReturn += sconto===0?createStringSaldoResiduo(user,totale)+'\n':createStringSaldoResiduo(user,totaleScontato)+'\n';
     stringReturn += createStringSeparator('**','-');
 
     let string = process.cwd()+`/receipts/`+user.uuid.toString()+`_receipt_`+new Date().toDateString()+`.txt`;
